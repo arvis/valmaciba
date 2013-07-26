@@ -32,8 +32,9 @@ public class WordsDbHelper extends SQLiteOpenHelper {
 	 public WordsDbHelper(Context context) {
 	        super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
-			SQLiteDatabase db = this.getWritableDatabase();
 			
+/*			
+			SQLiteDatabase db = this.getWritableDatabase();
 			//dummy data insert, just for testing
 			ContentValues values = new ContentValues();
 			values.put("word_lv", "nosaukums");
@@ -41,7 +42,7 @@ public class WordsDbHelper extends SQLiteOpenHelper {
 			
 			long id=db.insert(WordsDbHelper.TABLE_WORDS, null, values);
 			db.close();
-	        
+*/	        
 	        
 	    }	
 	
