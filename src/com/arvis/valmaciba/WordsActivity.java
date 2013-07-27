@@ -1,5 +1,6 @@
 package com.arvis.valmaciba;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.arvis.valmaciba.R;
@@ -58,6 +59,14 @@ public class WordsActivity extends Activity {
 		// change labels
 		
 		WordsDbHelper data=new WordsDbHelper(this);
+		try {
+			data.createDb();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		int[] wordIds={1,2,3,4};
 		List<String>result=data.getAllWords();
 		
