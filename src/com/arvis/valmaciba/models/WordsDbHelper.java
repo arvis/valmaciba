@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.UserDictionary.Words;
 
 /**
  * @author nekrod
@@ -169,8 +170,26 @@ public class WordsDbHelper extends SQLiteOpenHelper {
 	}
 	
 	
-	public List<String> getWords(int[] idList){
-		List<String> result=new ArrayList<String>();
+	public List<Word> getWords(String[] wordIds){
+		SQLiteDatabase db = this.getReadableDatabase();
+		String selectQuery = "SELECT  * FROM words"
+			    + " WHERE id IN (?,?,?,?)";
+		
+        Cursor cursor = db.rawQuery(selectQuery, wordIds);		
+		List<Word> result=new ArrayList<Word>();
+
+        if (cursor.moveToFirst()) {
+        	do {
+	        	//String row=cursor.getString(0)+"|"+cursor.getString(1)+"|"+cursor.getString(2);
+        		Word row=new Word();
+	        	//String row=cursor.getString(1);
+        		row.setId(Integer.parseInt(cursor.getString(0)));
+        		row.setWordLV(cursor.getString(1));
+        		row.setWordEN(cursor.getString(2));
+	            result.add(row);
+	        } while (cursor.moveToNext());
+        }
+        db.close();
 		return result;
 	}
 	

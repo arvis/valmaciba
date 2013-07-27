@@ -1,14 +1,19 @@
 package com.arvis.valmaciba;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.arvis.valmaciba.R;
+import com.arvis.valmaciba.models.Word;
 import com.arvis.valmaciba.models.WordsDbHelper;
 
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.drm.DrmStore.RightsStatus;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -16,13 +21,25 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class WordsActivity extends Activity {
+	
+	private int currentRigthIndex=0;
+	private int currentId=0;
+	private int correctGuesses=0;
+	private int incorrectGuesses=0;
+
+	private int totalAttempts=0; 
+
+	private ArrayList<Integer> pastAnswers=new ArrayList<Integer>();
+	private WordsDbHelper data;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_words);
+		data=new WordsDbHelper(this);
 		
-		this.setupStage();
+		checkDbCopy();
+		this.newWord();
 	}
 
 	@Override
@@ -31,65 +48,165 @@ public class WordsActivity extends Activity {
 		getMenuInflater().inflate(R.menu.words, menu);
 		return true;
 	}
+	
 	public void onAnswer1(View view) {
+		totalAttempts++;
+		Button btn=(Button)findViewById(R.id.answer1);  
 		
-		Button button1=(Button)findViewById(R.id.answer1);  
-		button1.setText("First answer"+System.currentTimeMillis());
-
-		TextView t=(TextView)findViewById(R.id.wordToCheck); 
-		t.setText("Precious!"+System.currentTimeMillis());
-		
+		if (currentRigthIndex==0){
+			correctGuesses++;
+			//btn.getBackground().setColorFilter(Color.GREEN,PorterDuff.Mode.MULTIPLY);
+			btn.setBackgroundColor(Color.GREEN);
+			newWord();
+		}
+		else {
+			incorrectGuesses++;
+			//btn.getBackground().setColorFilter(Color.RED,PorterDuff.Mode.MULTIPLY);
+			btn.setBackgroundColor(Color.RED);
+		}
 	}
 
 	public void onAnswer2(View view) {
-		System.out.println(view.getId());
+		totalAttempts++;
+		Button btn=(Button)findViewById(R.id.answer2);  
+
+		if (currentRigthIndex==1){
+			correctGuesses++;
+			//btn.getBackground().setColorFilter(Color.GREEN,PorterDuff.Mode.MULTIPLY);
+			btn.setBackgroundColor(Color.GREEN);
+			newWord();
+
+		}
+		else {
+			incorrectGuesses++;
+			//btn.getBackground().setColorFilter(Color.RED,PorterDuff.Mode.MULTIPLY);
+			btn.setBackgroundColor(Color.RED);
+		}
 		
 	}
 
 	public void onAnswer3(View view) {
-		System.out.println(view.getId());
+		Button btn=(Button)findViewById(R.id.answer3);  
+		totalAttempts++;
+
+		if (currentRigthIndex==2){
+			correctGuesses++;
+			//btn.getBackground().setColorFilter(Color.GREEN,PorterDuff.Mode.MULTIPLY);
+			btn.setBackgroundColor(Color.GREEN);
+			newWord();
+		}
+		else {
+			//btn.getBackground().setColorFilter(Color.RED,PorterDuff.Mode.MULTIPLY);
+			btn.setBackgroundColor(Color.RED);
+
+			incorrectGuesses++;
+		}
 	}
 
 	public void onAnswer4(View view) {
-		System.out.println(view.getId());
+		Button btn=(Button)findViewById(R.id.answer4);  
+
+		totalAttempts++;
+		if (currentRigthIndex==3){
+			//btn.getBackground().setColorFilter(Color.GREEN,PorterDuff.Mode.MULTIPLY);
+			btn.setBackgroundColor(Color.GREEN);
+
+			//TODO: wait for a little
+			correctGuesses++;
+			newWord();
+			
+		}
+		else {
+			incorrectGuesses++;
+			//btn.getBackground().setColorFilter(Color.RED,PorterDuff.Mode.MULTIPLY);
+			btn.setBackgroundColor(Color.RED);
+		}
+		
+		
 	}
 	
-	private void setupStage(){
-		// get random number
-		// change labels
-		
-		WordsDbHelper data=new WordsDbHelper(this);
+	private void checkDbCopy(){
 		try {
 			data.createDb();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
 		}
-		
-		
-		int[] wordIds={1,2,3,4};
-		List<String>result=data.getAllWords();
-		
-		changeLabels(result);
-		
 	}
 	
-	private void changeLabels(List<String>result){
+	private void newWord(){
 		
-		if (result.size()==0){
+		// set right and wrong answer count
+		TextView correctResult=(TextView)findViewById(R.id.correctResult); 
+		correctResult.setText(correctGuesses+"");
+		TextView incorrectResult=(TextView)findViewById(R.id.incorrectResult); 
+		incorrectResult.setText(incorrectGuesses+"");
+		
+		
+		ArrayList<String> wordIds=getRandomNumbers();
+		List<Word>result=data.getWords(wordIds.toArray(new String[wordIds.size()]));
+		changeLabels(result);
+	}
+	
+	/**
+	 * generate random numbers array
+	 * */
+	private ArrayList<String> getRandomNumbers(){
+		
+		ArrayList<String> randomIds = new ArrayList<String>();
+		String rnd;
+		
+		while (randomIds.size()<4){
+			rnd=(1+(int) (Math.random() * 15))+"";
+			if (!randomIds.contains(rnd)){
+				randomIds.add(rnd);
+			}
+		}
+		
+		return randomIds;
+	}
+	
+	
+	private void changeLabels(List<Word>wordData){
+		
+		if (wordData.size()!=4){
 			//TODO: implement way to show some error message
 			Log.e(null, "No data in words database");
 			return;
 		}
 		
+		/*from four answers looking which one will displayed as right
+		 * */
+		//TODO: better name
+		int rigthId= (int) (Math.random() * 4);
 		
-		TextView t=(TextView)findViewById(R.id.wordToCheck); 
-		t.setText(result.get(0));
-		    
+		//FIXME: better button organisation
 		Button button1=(Button)findViewById(R.id.answer1);  
 		Button button2=(Button)findViewById(R.id.answer2);  
 		Button button3=(Button)findViewById(R.id.answer3);  
 		Button button4=(Button)findViewById(R.id.answer4);  
+		
+		button1.setBackgroundResource(android.R.drawable.btn_default);
+		button2.setBackgroundResource(android.R.drawable.btn_default);
+		button3.setBackgroundResource(android.R.drawable.btn_default);
+		button4.setBackgroundResource(android.R.drawable.btn_default);
+		
+		//TODO: maybe need more flexible way
+		button1.setText(wordData.get(0).getWordLV());
+		button2.setText(wordData.get(1).getWordLV());
+		button3.setText(wordData.get(2).getWordLV());
+		button4.setText(wordData.get(3).getWordLV());
+		
+		
+		currentRigthIndex=rigthId;
+		currentId= wordData.get(rigthId).getId();
+		//pastAnswers.add()
+		
+		TextView t=(TextView)findViewById(R.id.wordToCheck); 
+		t.setText(wordData.get(rigthId).getWordEN());
+		    
+		
 		
 	}
 	

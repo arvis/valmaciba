@@ -4,5 +4,9 @@
     <string name="app_name">valmaciba</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="current_result">0/0</string>
+    <string name="correct_title">Pareizi:</string>
+    <string name="incorrect_title">Nepareizi:</string>
+    
 
 </resources>
