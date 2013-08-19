@@ -1,21 +1,13 @@
 package com.arvis.valmaciba;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.arvis.valmaciba.models.Stats;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
-public class StatsActivity extends ListActivity {
+public class StatsActivity extends Activity {
 
-	static final String[] FRUITS = new String[] { "Apple", "Avocado", "Banana",
-		"Blueberry", "Coconut", "Durian", "Guava", "Kiwifruit",
-		"Jackfruit", "Mango", "Olive", "Pear", "Sugar-apple" };	
 	
 	
 	@Override
@@ -24,30 +16,21 @@ public class StatsActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.stats);
 		
-        
-        // Defined Array values to show in ListView
-        String[] values = new String[] { "Android List View", 
-                                         "Adapter implementation",
-                                         "Simple List View In Android",
-                                         "Create List View Android", 
-                                         "Android Example", 
-                                         "List View Source Code", 
-                                         "List View Array Adapter", 
-                                         "Android Example List View" 
-                                        };
+		showStatsValues();
+		
+	}
+	
+	private void showStatsValues(){
+		
+		Stats stats= new Stats(this);
+		
+		TextView correctAnswers=(TextView)findViewById(R.id.correct_value); 
+		String correct=Integer.toString(stats.getCorrectAnswers()); 
+		correctAnswers.setText(correct);
 
-        // Define a new Adapter
-        // First parameter - Context
-        // Second parameter - Layout for the row
-        // Third parameter - ID of the TextView to which the data is written
-        // Forth - the Array of data
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-          android.R.layout.simple_list_item_1, android.R.id.text1, values);
-
-
-        // Assign adapter to ListView
-        setListAdapter(adapter); 		
+		TextView wrongAnswers=(TextView)findViewById(R.id.wrong_value); 
+		String incorrect=Integer.toString(stats.getWrongAnswers());
+		wrongAnswers.setText(incorrect);
 		
 	}
 	

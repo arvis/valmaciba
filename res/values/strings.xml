@@ -9,7 +9,10 @@
     <string name="correct_title">Pareizi:</string>
     <string name="incorrect_title">Nepareizi:</string>
     <string name="word_stats_file">com.arvis.words_stats.ini</string>
-    
+    <string name="correct_count_label">Pareizās atbildes</string>
+    <string name="wrong_count_label">Nepareizās atbildes</string>
+    <string name="menu_stats">Statistika</string>
+    <string name="menu_settings">Iestatījumi</string>
     
 
 </resources>
