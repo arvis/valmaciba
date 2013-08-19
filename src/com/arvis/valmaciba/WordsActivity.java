@@ -4,18 +4,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+//import com.actionbarsherlock.view.MenuInflater;
 import com.arvis.valmaciba.R;
+import com.arvis.valmaciba.models.Stats;
 import com.arvis.valmaciba.models.Word;
 import com.arvis.valmaciba.models.WordsDbHelper;
 
-
 import android.os.Bundle;
 import android.app.Activity;
-import android.drm.DrmStore.RightsStatus;
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,16 +28,17 @@ public class WordsActivity extends Activity {
 	private int correctGuesses=0;
 	private int incorrectGuesses=0;
 
-	private int totalAttempts=0; 
-
 	private ArrayList<Integer> pastAnswers=new ArrayList<Integer>();
 	private WordsDbHelper data;
+	private Stats stats;
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_words);
 		data=new WordsDbHelper(this);
+		stats=new Stats(this);
 		
 		checkDbCopy();
 		this.newWord();
@@ -44,41 +46,62 @@ public class WordsActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.words, menu);
 		return true;
 	}
 	
+	@Override
+	  public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case R.id.action_settings:
+	    	break;
+	    case R.id.action_stats:
+	    	Intent intent = new Intent(this, StatsActivity.class);
+	    	startActivity(intent);
+	    default:
+	      break;
+	    }
+
+	    return true;
+	  } 	
+	
+	private void onCorrectAnwser(){
+		correctGuesses++;
+		stats.addCorrectAnswers();
+		
+	}
+	
+	private void onWrongAnswer(){
+		incorrectGuesses++;
+		stats.addWrongAnswers();
+	}
+	
 	public void onAnswer1(View view) {
-		totalAttempts++;
 		Button btn=(Button)findViewById(R.id.answer1);  
 		
 		if (currentRigthIndex==0){
-			correctGuesses++;
-			//btn.getBackground().setColorFilter(Color.GREEN,PorterDuff.Mode.MULTIPLY);
+			onCorrectAnwser();
 			btn.setBackgroundColor(Color.GREEN);
 			newWord();
 		}
 		else {
-			incorrectGuesses++;
-			//btn.getBackground().setColorFilter(Color.RED,PorterDuff.Mode.MULTIPLY);
+			onWrongAnswer();
 			btn.setBackgroundColor(Color.RED);
 		}
 	}
 
 	public void onAnswer2(View view) {
-		totalAttempts++;
 		Button btn=(Button)findViewById(R.id.answer2);  
 
 		if (currentRigthIndex==1){
-			correctGuesses++;
+			onCorrectAnwser();
 			//btn.getBackground().setColorFilter(Color.GREEN,PorterDuff.Mode.MULTIPLY);
 			btn.setBackgroundColor(Color.GREEN);
 			newWord();
 
 		}
 		else {
-			incorrectGuesses++;
+			onWrongAnswer();
 			//btn.getBackground().setColorFilter(Color.RED,PorterDuff.Mode.MULTIPLY);
 			btn.setBackgroundColor(Color.RED);
 		}
@@ -87,38 +110,32 @@ public class WordsActivity extends Activity {
 
 	public void onAnswer3(View view) {
 		Button btn=(Button)findViewById(R.id.answer3);  
-		totalAttempts++;
 
 		if (currentRigthIndex==2){
-			correctGuesses++;
-			//btn.getBackground().setColorFilter(Color.GREEN,PorterDuff.Mode.MULTIPLY);
+			onCorrectAnwser();
 			btn.setBackgroundColor(Color.GREEN);
 			newWord();
 		}
 		else {
-			//btn.getBackground().setColorFilter(Color.RED,PorterDuff.Mode.MULTIPLY);
 			btn.setBackgroundColor(Color.RED);
 
-			incorrectGuesses++;
+			onWrongAnswer();
 		}
 	}
 
 	public void onAnswer4(View view) {
 		Button btn=(Button)findViewById(R.id.answer4);  
 
-		totalAttempts++;
 		if (currentRigthIndex==3){
-			//btn.getBackground().setColorFilter(Color.GREEN,PorterDuff.Mode.MULTIPLY);
 			btn.setBackgroundColor(Color.GREEN);
 
 			//TODO: wait for a little
-			correctGuesses++;
+			onCorrectAnwser();
 			newWord();
 			
 		}
 		else {
-			incorrectGuesses++;
-			//btn.getBackground().setColorFilter(Color.RED,PorterDuff.Mode.MULTIPLY);
+			onWrongAnswer();
 			btn.setBackgroundColor(Color.RED);
 		}
 		
@@ -129,7 +146,6 @@ public class WordsActivity extends Activity {
 		try {
 			data.createDb();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			
 		}
