@@ -4,6 +4,15 @@ public class Word {
 	private int id;
 	private String wordLV;
 	private String wordEN;
+	
+	public Word(){
+		
+	}
+	public Word(String wordLV, String wordEN){
+		this.wordLV=wordLV;
+		this.wordEN=wordEN;
+	}
+	
 	public int getId() {
 		return id;
 	}

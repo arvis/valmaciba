@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 //import com.actionbarsherlock.view.MenuInflater;
 import com.arvis.valmaciba.R;
 import com.arvis.valmaciba.models.Stats;
 import com.arvis.valmaciba.models.Word;
 import com.arvis.valmaciba.models.WordsDbHelper;
+import com.arvis.valmaciba.models.WordsList;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -27,6 +29,7 @@ public class WordsActivity extends Activity {
 	private int currentId=0;
 	private int correctGuesses=0;
 	private int incorrectGuesses=0;
+	private WordsList wordsList=new WordsList();
 
 	private ArrayList<Integer> pastAnswers=new ArrayList<Integer>();
 	private WordsDbHelper data;
@@ -159,30 +162,9 @@ public class WordsActivity extends Activity {
 		TextView incorrectResult=(TextView)findViewById(R.id.incorrectResult); 
 		incorrectResult.setText(incorrectGuesses+"");
 		
-		
-		ArrayList<String> wordIds=getRandomNumbers();
-		List<Word>result=data.getWords(wordIds.toArray(new String[wordIds.size()]));
+		List<Word>result=wordsList.getWords();
 		changeLabels(result);
 	}
-	
-	/**
-	 * generate random numbers array
-	 * */
-	private ArrayList<String> getRandomNumbers(){
-		
-		ArrayList<String> randomIds = new ArrayList<String>();
-		String rnd;
-		
-		while (randomIds.size()<4){
-			rnd=(1+(int) (Math.random() * 15))+"";
-			if (!randomIds.contains(rnd)){
-				randomIds.add(rnd);
-			}
-		}
-		
-		return randomIds;
-	}
-	
 	
 	private void changeLabels(List<Word>wordData){
 		
