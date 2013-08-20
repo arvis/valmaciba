@@ -32,7 +32,6 @@ public class WordsActivity extends Activity {
 	private WordsList wordsList=new WordsList();
 
 	private ArrayList<Integer> pastAnswers=new ArrayList<Integer>();
-	private WordsDbHelper data;
 	private Stats stats;
 
 	
@@ -40,10 +39,8 @@ public class WordsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_words);
-		data=new WordsDbHelper(this);
 		stats=new Stats(this);
 		
-		checkDbCopy();
 		this.newWord();
 	}
 
@@ -143,15 +140,6 @@ public class WordsActivity extends Activity {
 		}
 		
 		
-	}
-	
-	private void checkDbCopy(){
-		try {
-			data.createDb();
-		} catch (IOException e) {
-			e.printStackTrace();
-			
-		}
 	}
 	
 	private void newWord(){
