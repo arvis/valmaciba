@@ -1,12 +1,13 @@
 package com.arvis.valmaciba;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.arvis.valmaciba.models.Stats;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class StatsActivity extends Activity {
+public class StatsActivity extends SherlockActivity {
 
 	
 	
@@ -19,6 +20,12 @@ public class StatsActivity extends Activity {
 		showStatsValues();
 		
 	}
+	
+	@Override
+    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }	
+	
 	
 	private void showStatsValues(){
 		

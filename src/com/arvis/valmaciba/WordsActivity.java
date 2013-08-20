@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
+import com.actionbarsherlock.app.SherlockActivity;
 //import com.actionbarsherlock.view.MenuInflater;
 import com.arvis.valmaciba.R;
 import com.arvis.valmaciba.models.Stats;
 import com.arvis.valmaciba.models.Word;
-import com.arvis.valmaciba.models.WordsDbHelper;
 import com.arvis.valmaciba.models.WordsList;
 
 import android.os.Bundle;
@@ -23,7 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class WordsActivity extends Activity {
+public class WordsActivity extends SherlockActivity {
 	
 	private int currentRigthIndex=0;
 	private int currentId=0;
@@ -45,10 +46,35 @@ public class WordsActivity extends Activity {
 	}
 
 	@Override
+    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.words, menu);
+        return super.onCreateOptionsMenu(menu);
+    }	
+
+	@Override
+	  public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+	    switch (item.getItemId()) {
+	    case R.id.action_settings:
+	    	break;
+	    case R.id.action_stats:
+	    	Intent intent = new Intent(this, StatsActivity.class);
+	    	startActivity(intent);
+	    default:
+	      break;
+	    }
+
+	    return true;
+	  } 	
+	
+	
+	
+/*	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.words, menu);
 		return true;
 	}
+	
 	
 	@Override
 	  public boolean onOptionsItemSelected(MenuItem item) {
@@ -64,7 +90,7 @@ public class WordsActivity extends Activity {
 
 	    return true;
 	  } 	
-	
+*/	
 	private void onCorrectAnwser(){
 		correctGuesses++;
 		stats.addCorrectAnswers();
